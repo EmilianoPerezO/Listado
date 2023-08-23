@@ -1,20 +1,34 @@
 const btnA = document.getElementById("agregar");
 const btnL = document.getElementById("limpiar");
-const inputText = document.getElementById('item');
-const container = document.getElementById('contenedor');
+const inputText = document.getElementById("item");
+const container = document.getElementById("contenedor");
 
-btnA.addEventListener('click', () => {
-    let inputValue = inputText.value;
-    localStorage.setItem('inputText', inputValue);
-    console.log(localStorage.getItem("inputText"));
+let items = JSON.parse(localStorage.getItem("items")) || [];
 
-    if (inputValue) {
-        container.innerHTML += `<li>${inputValue}</li>`;
-    }
+btnA.addEventListener("click", () => {
+  let inputValue = inputText.value;
+
+  if (inputValue) {
+    items.push(inputValue);
+    localStorage.setItem("items", JSON.stringify(items));
+    inputText.value = "";
+    renderItems();
+  }
 });
 
-btnL.addEventListener('click', () => {
-    localStorage.clear();
-    container.innerHTML = null;
-    console.log(localStorage.getItem("inputText"));
+btnL.addEventListener("click", () => {
+  localStorage.removeItem("items");
+  items = [];
+  container.innerHTML = "";
 });
+
+function renderItems() {
+  container.innerHTML = "";
+  items.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    container.appendChild(li);
+  });
+}
+
+renderItems();
